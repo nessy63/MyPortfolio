@@ -1,0 +1,5 @@
+# Allow everything; no hidden drafts to protect
+User-agent: *
+Allow: /
+
+Sitemap: https://nessy.dev/sitemap.xml

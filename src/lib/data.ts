@@ -1,12 +1,13 @@
 /* Central site content — swap these values to make the portfolio yours. */
 
 export const site = {
-  name: "Nessy Poudel",
+  name: "Nischal Poudel",
+  firstName: "Nischal",
   shortName: "Nessy",
   nickname: "Nessy",
   role: "Fullstack Developer",
-  tagline: "Web Engineer | TypeScript & Go | DX Tooling | Jakarta, ID",
-  location: "Jakarta, ID",
+  tagline: "Web Engineer | TypeScript & Go | DX Tooling | Kathmandu, Nepal",
+  location: "Kathmandu, Nepal",
   email: "hello@nessy.dev",
   cvUrl: "/cv.pdf",
 };
@@ -142,22 +143,22 @@ export type Track = { title: string; artist: string; src: string; art: string };
 
 export const tracks: Track[] = [
   {
-    title: "Aruarian Dance",
-    artist: "Nujabes",
-    src: "/music/aruarian_dance.mp3",
-    art: "/music/art_ghibli1.svg",
+    title: "Snowman",
+    artist: "Sia",
+    src: "/music/snowman.mp3",
+    art: "/music/art_chill1.svg",
   },
   {
-    title: "Christina",
-    artist: "Joe Hisaishi",
-    src: "/music/christina.mp3",
-    art: "/music/art_ghibli2.svg",
+    title: "Coffee",
+    artist: "beabadoobee",
+    src: "/music/coffee.mp3",
+    art: "/music/art_chill2.svg",
   },
   {
-    title: "A Town with an Ocean View",
-    artist: "Joe Hisaishi",
-    src: "/music/town_ocean_view.mp3",
-    art: "/music/art_ghibli3.svg",
+    title: "Explorers",
+    artist: "The Microphones",
+    src: "/music/explorers.mp3",
+    art: "/music/art_chill3.svg",
   },
 ];
 
