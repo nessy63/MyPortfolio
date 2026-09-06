@@ -130,10 +130,11 @@ fi
 
 TARGETBLANK=$(grep -RIn "${INCLUDES[@]}" "${EXCLUDES[@]}" "target=\"_blank\"" . 2>/dev/null | grep -Lv "noopener" 2>/dev/null | wc -l | tr -d ' ')
 # fallback simpler check: any target=_blank without rel=noopener on the same line
+TB_ALL=$(grep -RIn "${INCLUDES[@]}" "${EXCLUDES[@]}" "target=\"_blank\"" . 2>/dev/null | wc -l | tr -d ' ')
 TB_UNSAFE=$(grep -RIn "${INCLUDES[@]}" "${EXCLUDES[@]}" "target=\"_blank\"" . 2>/dev/null | grep -v "noopener" | wc -l | tr -d ' ')
 if [ "${TB_UNSAFE:-0}" -gt 0 ]; then
   warn "$TB_UNSAFE link(s) with target=\"_blank\" missing rel=\"noopener noreferrer\" (tabnabbing risk)"
-else
+elif [ "${TB_ALL:-0}" -gt 0 ]; then
   pass "External links using target=_blank have noopener/noreferrer"
 fi
 

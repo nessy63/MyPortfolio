@@ -56,7 +56,7 @@ export default function SocialIcons({ size = 40 }: { size?: number }) {
           <motion.a
             href={s.href}
             target={s.href.startsWith("http") ? "_blank" : undefined}
-            rel="noreferrer"
+            rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
             aria-label={s.label}
             whileHover={{ y: -3 }}
             whileTap={{ scale: 0.92 }}

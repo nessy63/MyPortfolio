@@ -197,8 +197,8 @@ export default function ProfessionalPage() {
             <Reveal key={p.title} delay={i * 0.08}>
               <motion.a
                 href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={p.href.startsWith("http") ? "_blank" : undefined}
+                rel={p.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 whileHover={{ y: -5 }}
                 className="group flex h-full flex-col rounded-2xl border border-hairline bg-surface p-6 transition-colors duration-300 hover:border-accent/60"
               >
