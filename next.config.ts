@@ -9,6 +9,7 @@ const ContentSecurityPolicy = `
   media-src 'self';
   connect-src 'self';
   frame-src www.youtube.com youtube.com;
+  worker-src 'self' blob:;
   frame-ancestors 'none';
   base-uri 'self';
   form-action 'self';
@@ -35,7 +36,7 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+    value: "camera=(), microphone=(), geolocation=(), interest-cohort=(), automation=, autoplay=, bluetooth=(), payment=(), usb=()",
   },
   { key: "X-DNS-Prefetch-Control", value: "on" },
 ];
