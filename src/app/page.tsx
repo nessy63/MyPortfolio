@@ -10,6 +10,7 @@ import {
   Sparkles,
   User,
 } from "lucide-react";
+import Image from "next/image";
 import SectionHeading from "@/components/SectionHeading";
 import EducationAccordion from "@/components/EducationAccordion";
 import HighlighterName from "@/components/HighlighterName";
@@ -103,9 +104,13 @@ export default function ProfessionalPage() {
                 aria-hidden
                 className="absolute -inset-3 rounded-full border border-accent/20"
               />
-              <img
+              <Image
                 src="/profile.png"
                 alt="Profile photo of Nessy"
+                width={640}
+                height={640}
+                preload
+                sizes="(max-width: 640px) 256px, 320px"
                 className="h-full w-full rounded-full object-cover"
                 onError={(e) => {
                   e.currentTarget.src =
@@ -160,9 +165,11 @@ export default function ProfessionalPage() {
               </p>
             </div>
             <div className="glass-card flex items-center justify-center rounded-2xl p-8 lg:col-span-2">
-              <img
+              <Image
                 src="/desk.jpg"
                 alt="My workspace"
+                width={800}
+                height={530}
                 className="max-h-56 w-full rounded-xl object-cover"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";

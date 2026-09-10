@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import { ChevronDown, ChevronUp, Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { tracks } from "@/lib/data";
 
@@ -40,7 +41,12 @@ export default function MusicPlayer() {
   const lastSaveRef = useRef(0);
   const mountedRef = useRef(false);
   const stateRef = useRef({ index, playing });
-  stateRef.current = { index, playing };
+
+  // Keep the ref in sync after commit instead of writing it during render.
+  // Declared first so it runs before the persist effect below reads it.
+  useEffect(() => {
+    stateRef.current = { index, playing };
+  }, [index, playing]);
 
   const saveState = (force = false) => {
     const now = Date.now();
@@ -62,24 +68,27 @@ export default function MusicPlayer() {
     }
   };
 
-  // Restore the last session once on mount (before the [index] effect).
+  // Restore the last session once on mount. Deferred to a microtask so the
+  // setState calls don't fire synchronously inside the effect body.
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const s = JSON.parse(raw) as { index?: number; time?: number; playing?: boolean };
-      if (Number.isInteger(s.index) && (s.index as number) >= 0 && (s.index as number) < tracks.length) {
-        pendingSeekRef.current =
-          Number.isFinite(s.time) && (s.time as number) > 0 ? (s.time as number) : null;
-        setIndex(s.index as number);
-        // Try to resume; if the browser blocks autoplay there is no gesture
-        // yet, so we stay paused at the restored position until the user
-        // hits play.
-        if (s.playing) setPlaying(true);
+    queueMicrotask(() => {
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const s = JSON.parse(raw) as { index?: number; time?: number; playing?: boolean };
+        if (Number.isInteger(s.index) && (s.index as number) >= 0 && (s.index as number) < tracks.length) {
+          pendingSeekRef.current =
+            Number.isFinite(s.time) && (s.time as number) > 0 ? (s.time as number) : null;
+          setIndex(s.index as number);
+          // Try to resume; if the browser blocks autoplay there is no gesture
+          // yet, so we stay paused at the restored position until the user
+          // hits play.
+          if (s.playing) setPlaying(true);
+        }
+      } catch {
+        /* corrupt or unavailable storage — start fresh */
       }
-    } catch {
-      /* corrupt or unavailable storage — start fresh */
-    }
+    });
   }, []);
 
   // Flush the exact position when the tab is hidden or closed.
@@ -87,7 +96,6 @@ export default function MusicPlayer() {
     const onHide = () => saveState(true);
     window.addEventListener("pagehide", onHide);
     return () => window.removeEventListener("pagehide", onHide);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Pause the music whenever any <video> on the page starts playing.
@@ -124,7 +132,6 @@ export default function MusicPlayer() {
       return;
     }
     saveState(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, playing]);
 
   const togglePlay = () => {
@@ -152,21 +159,6 @@ export default function MusicPlayer() {
   };
 
   const progress = duration > 0 ? (current / duration) * 100 : 0;
-
-  const Art = ({ className = "" }: { className?: string }) => (
-    <img
-      src={track.art}
-      alt=""
-      className={`object-cover ${className}`}
-      onError={(e) => (e.currentTarget.style.opacity = "0.25")}
-    />
-  );
-
-  const SpinWrap = ({ children }: { children: React.ReactNode }) => (
-    <span className={playing ? "block animate-[spin_8s_linear_infinite]" : "block"}>
-      {children}
-    </span>
-  );
 
   return (
     <>
@@ -209,7 +201,7 @@ export default function MusicPlayer() {
             aria-label="Open music player"
             className="h-[72px] w-[72px] overflow-hidden rounded-full border-2 border-hairline bg-surface shadow-lg shadow-black/40 sm:hidden bottom-6 left-6 fixed"
           >
-            <Art className={`h-full w-full rounded-full ${playing ? "animate-[spin_8s_linear_infinite]" : ""}`} />
+            <Art src={track.art} className={`h-full w-full rounded-full ${playing ? "animate-[spin_8s_linear_infinite]" : ""}`} />
           </motion.button>
         )}
       </AnimatePresence>
@@ -241,9 +233,9 @@ export default function MusicPlayer() {
               {/* Top row: art + info + play button */}
               <div className="flex items-center gap-4">
                 {/* Spinning round album art */}
-                <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 border-hairline shadow-md shadow-black/30">
-                  <SpinWrap>
-                    <Art className="h-14 w-14 rounded-full" />
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 border-hairline shadow-md shadow-black/30">
+                  <SpinWrap playing={playing}>
+                    <Art src={track.art} className="rounded-full" />
                   </SpinWrap>
                 </div>
 
@@ -328,9 +320,9 @@ export default function MusicPlayer() {
           >
             <div className="flex items-center gap-3 rounded-2xl border border-hairline bg-surface/90 py-2 pl-2 pr-3 shadow-xl shadow-black/40 backdrop-blur-xl">
               {/* Square album art */}
-              <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-hairline">
-                <SpinWrap>
-                  <Art className="h-10 w-10" />
+              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-hairline">
+                <SpinWrap playing={playing}>
+                  <Art src={track.art} />
                 </SpinWrap>
               </div>
 
@@ -389,9 +381,9 @@ export default function MusicPlayer() {
             {/* Header row: art + info + collapse */}
             <div className="flex items-center gap-3.5">
               {/* Square album art */}
-              <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-hairline shadow-md shadow-black/30">
-                <SpinWrap>
-                  <Art className="h-14 w-14" />
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-hairline shadow-md shadow-black/30">
+                <SpinWrap playing={playing}>
+                  <Art src={track.art} />
                 </SpinWrap>
               </div>
 
@@ -471,6 +463,29 @@ export default function MusicPlayer() {
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+/* ── Album art (hoisted: components created during render reset state) ── */
+
+function Art({ src, className = "" }: { src: string; className?: string }) {
+  return (
+    <Image
+      src={src}
+      alt=""
+      fill
+      sizes="72px"
+      className={`object-cover ${className}`}
+      onError={(e) => (e.currentTarget.style.opacity = "0.25")}
+    />
+  );
+}
+
+function SpinWrap({ playing, children }: { playing: boolean; children: React.ReactNode }) {
+  return (
+    <span className={playing ? "block animate-[spin_8s_linear_infinite]" : "block"}>
+      {children}
+    </span>
   );
 }
 

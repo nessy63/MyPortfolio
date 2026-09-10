@@ -16,8 +16,24 @@ export default function ThankYouAnimation() {
   const [particles, setParticles] = useState<{ id: number; x: number; y: number; size: number; delay: number; duration: number; color: string }[]>([]);
   const message = "Thank you for visiting ✨";
 
+  const makeParticles = () =>
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 8 + 4,
+      delay: Math.random() * 3,
+      duration: Math.random() * 4 + 3,
+      color: Math.random() > 0.5 ? "#ffb454" : "#f472b6",
+    }));
+
+  // Generate the particles in the timeout callback (not synchronously in the
+  // effect body) so the first paint stays deterministic for hydration.
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 100);
+    const timer = setTimeout(() => {
+      setParticles(makeParticles());
+      setVisible(true);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -34,20 +50,6 @@ export default function ThankYouAnimation() {
     }, 50);
     return () => clearInterval(interval);
   }, [visible]);
-
-  useEffect(() => {
-    setParticles(
-      Array.from({ length: 20 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 8 + 4,
-        delay: Math.random() * 3,
-        duration: Math.random() * 4 + 3,
-        color: Math.random() > 0.5 ? "#ffb454" : "#f472b6",
-      }))
-    );
-  }, []);
 
   return (
     <motion.div

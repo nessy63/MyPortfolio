@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Gamepad2, Music2, Palette, Play } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import WordCycle from "@/components/WordCycle";
-import DottedGlobe from "@/components/DottedGlobe";
+import PuzzleCanvas from "@/components/PuzzleCanvas";
 import SocialIcons from "@/components/SocialIcons";
 import Reveal from "@/components/Reveal";
 import { site, hobbies, lifeCards } from "@/lib/data";
@@ -14,10 +15,10 @@ import ThankYouAnimation from "@/components/ThankYouAnimation";
 const traits = ["curious", "a builder", "a night owl", "caffeinated", "playful", "persistent"];
 
 function HobbyMedia({ hobby }: { hobby: Hobby }) {
-  if (hobby.media === "globe") {
+  if (hobby.media === "puzzle") {
     return (
       <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-b-2xl bg-[#0d1017] pt-2">
-        <DottedGlobe size={200} />
+        <PuzzleCanvas height={168} />
       </div>
     );
   }
@@ -29,10 +30,12 @@ function HobbyMedia({ hobby }: { hobby: Hobby }) {
         aria-label={`Play ${hobby.title} video`}
         className="group/media relative block w-full flex-1 overflow-hidden rounded-b-2xl"
       >
-        <img
+        <Image
           src="/hobby-music.jpg"
           alt=""
-          className="h-full min-h-[160px] w-full object-cover transition-transform duration-500 group-hover/media:scale-105"
+          fill
+          sizes="(max-width: 640px) 100vw, 50vw"
+          className="object-cover transition-transform duration-500 group-hover/media:scale-105"
           onError={(e) => {
             e.currentTarget.style.display = "none";
           }}
@@ -49,10 +52,12 @@ function HobbyMedia({ hobby }: { hobby: Hobby }) {
 
   return (
     <div className="w-full flex-1 overflow-hidden rounded-b-2xl">
-      <img
+      <Image
         src={hobby.title.includes("photography") ? "/hobby-photo.jpg" : "/hobby-food.jpg"}
         alt={hobby.title}
-        className="h-full min-h-[140px] w-full object-cover transition-transform duration-500 hover:scale-105"
+        fill
+        sizes="(max-width: 640px) 100vw, 50vw"
+        className="object-cover transition-transform duration-500 hover:scale-105"
         onError={(e) => {
           e.currentTarget.style.display = "none";
         }}
@@ -86,7 +91,7 @@ export default function PersonalPage() {
           transition={{ duration: 0.55, delay: 0.1 }}
           className="mt-3 text-3xl font-extrabold sm:text-5xl"
         >
-          My name is{" "}
+          My nickname is{" "}
           <span className="inline-block rounded-xl border border-accent/50 bg-surface px-3 py-1 text-accent shadow-[0_0_24px_-8px_rgba(255,180,84,0.5)]">
             {site.nickname}
           </span>
@@ -145,7 +150,7 @@ export default function PersonalPage() {
                 )}
                 <div className="p-6 pb-4">
                   <h3 className="flex items-center gap-2 text-lg font-bold">
-                    {hobby.media === "globe" && <Gamepad2 size={18} className="text-accent" />}
+                    {hobby.media === "puzzle" && <Gamepad2 size={18} className="text-accent" />}
                     {hobby.title}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">{hobby.copy}</p>

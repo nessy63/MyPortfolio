@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: "Fullstack developer, hobbyist, and maker of small delightful things.",
 };
 
-const viewport: Viewport = {
+export const viewport: Viewport = {
   themeColor: "#0a0a0f",
 };
 

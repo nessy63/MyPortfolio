@@ -56,7 +56,7 @@ export const bio = {
   professional:
     "I'm a fullstack developer who treats product engineering like a craft: typed end-to-end, measured in production, and obsessed with the small interactions that make software feel alive. Lately I've been building DX tooling and realtime apps with TypeScript, Go, and a lot of Framer Motion.",
   personal:
-    "Outside the editor I'm a playlist curator, a street photographer, and a serial hobbyist. I keep a dev journal of half-finished ideas, learn languages badly but enthusiastically, and believe a good README is a love letter.",
+    "Outside the editor I'm a playlist curator, a street photographer, and a serial hobbyist. I keep a dev journal of half-finished ideas, solve puzzles badly but enthusiastically, and believe a good README is a love letter.",
 };
 
 export const skills = [
@@ -100,16 +100,16 @@ export const projects: Project[] = [
 export type Hobby = {
   title: string;
   copy: string;
-  media: "photo" | "video" | "globe";
+  media: "photo" | "video" | "puzzle";
   badge?: string;
 };
 
 export const hobbies: Hobby[] = [
   {
-    title: "Learning languages",
-    copy: "Working through Japanese and Spanish, one flashcard deck at a time. The globe lights up wherever I've been.",
-    media: "globe",
-    badge: "+1,100 words learned",
+    title: "Puzzle solving",
+    copy: "Sudoku on the commute, Rubik's Cube on the desk. Speedsolving PB 42s, and a weekly newspaper sudoku streak to defend.",
+    media: "puzzle",
+    badge: "PB 42s / 3×3",
   },
   {
     title: "Music & synths",
@@ -143,29 +143,22 @@ export type Track = { title: string; artist: string; src: string; art: string };
 
 export const tracks: Track[] = [
   {
-    title: "Snowman",
-    artist: "Sia",
-    src: "/music/snowman.mp3",
+    title: "Memories",
+    artist: "Maroon 5",
+    src: "/music/Maroon 5 - Memories (Official Video)(MP3_160K).mp3",
     art: "/music/art_chill1.svg",
   },
   {
-    title: "Coffee",
-    artist: "beabadoobee",
-    src: "/music/coffee.mp3",
+    title: "Bardali",
+    artist: "Sushant KC ft. Indrakala Rai",
+    src: "/music/Sushant KC - Bardali ft. Indrakala Rai (Official Music Video)(MP3_160K).mp3",
     art: "/music/art_chill2.svg",
   },
   {
-    title: "Explorers",
-    artist: "The Microphones",
-    src: "/music/explorers.mp3",
+    title: "Tu Hai Kahan",
+    artist: "AUR",
+    src: "/music/Tu Hai Kahan by AUR _ تو ہے کہاں (Official Music Video)(MP3_160K).mp3",
     art: "/music/art_chill3.svg",
   },
 ];
 
-/* ── Language dropdown ───────────────────────────────────────── */
-
-export const languages = [
-  { code: "EN", label: "English" },
-  { code: "ID", label: "Bahasa Indonesia" },
-  { code: "JP", label: "日本語" },
-];
